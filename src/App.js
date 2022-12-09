@@ -1,5 +1,5 @@
 // import { useSelector } from 'react-redux';
-// import Todo from "./componets/todo";
+import Todo from "./componets/todo";
 import Form from "./componets/Form";
 // import FilterButton from "./componets/FilterButton";
 import { useEffect, useRef } from "react";
@@ -30,15 +30,15 @@ import { getFirebaseDATA } from "./features/todo/todoSlice";
 //   return ref.current;
 // }
 
-// const FILTER_MAP = {
-//   All: () => true,
-//   Active: (task) => !task.completed,
-//   Completed: (task) => task.completed
-// };
+const FILTER_MAP = {
+  All: () => true,
+  Active: (task) => !task.completed,
+  Completed: (task) => task.completed
+};
 
 // console.log(FILTER_NAMES);
 
-// console.log(clouddb)
+console.log(clouddb)
 // const { FILTER } = useSelector((store) => store.todo);
 
 
@@ -87,15 +87,17 @@ function App() {
 
   // }
 
-  //   const taskList = DATA.filter(FILTER_MAP[FILTER])
-  // .map((task) => (
-  //   <Todo
-  //     id={task.id}
-  //     name={task.name}
-  //     completed={task.completed}
-  //     key={task.id}
-  //   />
-  // ));
+    const taskList = DATA.filter(FILTER_MAP[FILTER])
+  .map((task) => (
+    <Todo
+      id={task.id}
+      name={task.name}
+      completed={task.completed}
+      key={task.id}
+    />
+  ));
+
+  //commit
 
 
   const taskListNoun = DATA.length <= 1 ? "Task" : "Tasks";
