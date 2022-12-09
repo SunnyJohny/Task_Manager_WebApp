@@ -16,6 +16,6 @@ export default function FilterButtonContainer() {
       ));
 
   return (
-   <>{filterList}</>
+   <>{filterList} </>
   )
 }
