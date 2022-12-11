@@ -270,9 +270,13 @@ body {
   font-size: inherit;
   font-family: inherit;
   line-height: inherit;
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
+  /* justify-content:flex-start;
+  justify-items: flex-start; */
+  /* align-items: center; */
   margin-bottom: 0;
-  padding: 8px 15px 5px;
+  padding: 5px 15px 5px;
   cursor: pointer;
   touch-action: manipulation;
 }

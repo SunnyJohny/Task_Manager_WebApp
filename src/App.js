@@ -1,132 +1,230 @@
-// import { useSelector } from 'react-redux';
-import Todo from "./componets/todo";
+//   // async function getAllDocs() {
+
+//   // querySnapshot.forEach((docu) => {
+//   // doc.data() is never undefined for query doc snapshots
+//   // console.log(doc.id, " => ", doc.data());
+
+//   // for (let doc of querySnapshot.docs) {
+//   // ArrayOfDocs.push(docu.data());
+
+//   // const usersCollection = collection(clouddb,"users");
+//   //   useEffect(() => {
+//   //   // let ArrayOfDocs = [];
+
+//   //  getAllDocs();
+//   // },[]);
+
+//   // console.log(ArrayOfDocs);
+
+//   // function addTask(name){
+//   //   const newTask = { id: `todo-${nanoid()}`, name, completed: false };
+//   //  setTasks([...DATA,newTask]);
+
+//   // }
+
+//     const taskList = DATA.filter(FILTER_MAP[FILTER])
+//   .map((task) => (
+//     <Todo
+//       id={task.id}
+//       name={task.name}
+//       completed={task.completed}
+//       key={task.id}
+//     />
+//   ));
+
+import React, { useState, useRef, useEffect } from "react";
+
 import Form from "./componets/Form";
-// import FilterButton from "./componets/FilterButton";
-import { useEffect, useRef } from "react";
-import Todotasks from "./componets/Todotasks";
-import FilterButtonContainer from "./componets/FilterButtonContainer";
-import { clouddb } from "./FirebaseConfig";
-
-import { collection, getDocs } from "firebase/firestore";
-// import { ViewProducts } from "./componets/Products";
-import { ToastContainer, toast } from "react-toastify";
-
+import FilterButton from "./componets/FilterButton";
+import Todo from "./componets/todo";
+// import { useSelector } from 'react-redux';
 import { useDispatch, useSelector } from "react-redux";
 import { getFirebaseDATA } from "./features/todo/todoSlice";
-// import { getData } from "./features/todo/todoSlice";
+import { doc, deleteDoc, updateDoc, setDoc } from "firebase/firestore";
+import { clouddb } from "./FirebaseConfig";
+import { toast, ToastContainer } from "react-toastify";
 
-// import { useEffect } from 'react';
-
-// import { isLoading } from './features/todo/todoSlice';
-// import { nanoid } from "nanoid";
-// import { FILTER_MAP } from './componets/FILTERmap';
-// import { FILTER_NAMES } from './componets/FILTERmap';
-
-// function usePrevious(value) {
-//   const ref = useRef();
-//   useEffect(() => {
-//     ref.current = value;
-//   });
-//   return ref.current;
-// }
+function usePrevious(value) {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
 
 const FILTER_MAP = {
   All: () => true,
   Active: (task) => !task.completed,
-  Completed: (task) => task.completed
+  Completed: (task) => task.completed,
 };
 
-// console.log(FILTER_NAMES);
+const FILTER_NAMES = Object.keys(FILTER_MAP);
 
-console.log(clouddb)
-// const { FILTER } = useSelector((store) => store.todo);
+function App(props) {
+  const [filter, setFilter] = useState("All");
 
-
-function App() {
-  const { DATA, isLoading,FILTER } = useSelector((store) => store.todo);
-
+  const { DATA } = useSelector((store) => store.todo);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getFirebaseDATA());
-  }, []);
+  },[dispatch]);
 
-  if (isLoading) {
-    toast(<h1>Loading...</h1>);
-  }
+  const updateDocument = async (id, newName, e) => {
+    // e.preventDefault();
 
-  // async function getAllDocs() {
+    try {
+      const washingtonRef = doc(clouddb, "Todo", id);
 
-  // querySnapshot.forEach((docu) => {
-  // doc.data() is never undefined for query doc snapshots
-  // console.log(doc.id, " => ", doc.data());
+      await updateDoc(washingtonRef, {
+        name: newName,
+      });
+      dispatch(getFirebaseDATA());
 
-  // for (let doc of querySnapshot.docs) {
-  // ArrayOfDocs.push(docu.data());
+      toast("Task Edited Succesfully");
 
-  // const usersCollection = collection(clouddb,"users");
-  //   useEffect(() => {
-  //   // let ArrayOfDocs = [];
+      // setNewName("");
+      // setEditing(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const toggleTaskCompleted = async (id, completed) => {
+    // e.prevent.default();
 
-  //  getAllDocs();
-  // },[]);
+    try {
+      const washingtonRef = doc(clouddb, "Todo", id);
 
-  // console.log(ArrayOfDocs);
+      await updateDoc(washingtonRef, {
+        completed: !completed,
+      });
+    // dispatch(getFirebaseDATA());
 
-  // const { id,name,completed } = useSelector((store) => store.todo.DATA);
-  // const { FILTER } = useSelector((store) => store.todo);
-  // console.log(filter);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  // console.log({ DATA,FILTER_MAP,FILTER_NAMES })
-  // const [filter, setFilter] = useState('All');
-  // const [tasks, setTasks] = useState(DATA);
+  // function deleteTask(id) {
+  //   const remainingTasks = tasks.filter(task => id !== task.id);
+  //   setTasks(remainingTasks);
+  // }
+  const deleteTodo = async (id) => {
+    if (window.confirm("are you sure you want to delete")) {
+      //   console.log("delete")
+      // console.log(id,deleteData );
 
-  // function addTask(name){
-  //   const newTask = { id: `todo-${nanoid()}`, name, completed: false };
-  //  setTasks([...DATA,newTask]);
+      // dispatch(deleteData(id));
 
+      try {
+        await deleteDoc(doc(clouddb, "Todo", id));
+       
+
+        dispatch(getFirebaseDATA());
+
+        toast("Task Deleted Succesfully");
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  // function editTask(id, newName) {
+  //   const editedTaskList = tasks.map(task => {
+  //   // if this task has the same ID as the edited task
+  //     if (id === task.id) {
+  //       //
+  //       return {...task, name: newName}
+  //     }
+  //     return task;
+  //   });
+  //   setTasks(editedTaskList);
   // }
 
-    const taskList = DATA.filter(FILTER_MAP[FILTER])
-  .map((task) => (
+  const taskList = DATA.filter(FILTER_MAP[filter]).map((task) => (
     <Todo
       id={task.id}
       name={task.name}
+      time={task.time}
       completed={task.completed}
       key={task.id}
+      toggleTaskCompleted={toggleTaskCompleted}
+      deleteTask={deleteTodo}
+      editTask={updateDocument}
     />
   ));
 
-//commit
-//Another commit
+  const filterList = FILTER_NAMES.map((name) => (
+    <FilterButton
+      key={name}
+      name={name}
+      isPressed={name === filter}
+      setFilter={setFilter}
+    />
+  ));
 
-  const taskListNoun = DATA.length <= 1 ? "Task" : "Tasks";
+  // function addTask(name) {
+  //   const newTask = { id: "todo-" + nanoid(), name: name, completed: false };
+  //   setTasks([...tasks, newTask]);
+  // }
 
-  const headingText = `${DATA.length}  ${taskListNoun} remaining`;
- 
-  // const prevTaskLength = usePrevious(DATA.length);
-  // const listHeadingRef = useRef(null);
- 
+  const submitTask = async (id, name, e) => {
+    console.log("loged");
+    console.log(name);
+
+    //  e.preventDefault();
+    //   if(name===('') ){
+    //  toast.warning('pls enter the task name')
+
+    // } else{
+    // const  id = 'todo-' + 0;
+
+    let TimeStamp = new Date().toLocaleString();
+
+    let ref = doc(clouddb, "Todo/" + name);
+
+    await setDoc(ref, {
+      //  ImageName:(name+ext),
+      // id: id+1,
+      name: name,
+
+      completed: false,
+      time: TimeStamp,
+    });
+    // setName('');
+
+    toast("Tasks Added");
+    // }
+    dispatch(getFirebaseDATA());
+  };
+
+  const tasksNoun = taskList.length !== 1 ? "tasks" : "task";
+  const headingText = `${taskList.length} ${tasksNoun} remaining`;
+
+  const listHeadingRef = useRef(null);
+  const prevTaskLength = usePrevious(DATA.length);
+
+  useEffect(() => {
+    if (DATA.length - prevTaskLength === -1) {
+      listHeadingRef.current.focus();
+    }
+  }, [DATA.length, prevTaskLength]);
 
   return (
     <div className="todoapp stack-large">
       <ToastContainer />
-      {/* < ViewProducts/> */}
 
-      <h1>Simple Task Manager</h1>
-      <Form /*addTask={addTask}*/ />
-      <div className="filters btn-group stack-exception">
-        <FilterButtonContainer />
-      </div>
-      <h2 id="list-heading" tabIndex="-1">
+      <Form addTask={submitTask} />
+      <div className="filters btn-group stack-exception">{filterList}</div>
+      <h2 id="list-heading" tabIndex="-1" ref={listHeadingRef}>
         {headingText}
       </h2>
       <ul
-        // role="list"
+      
         className="todo-list stack-large stack-exception"
         aria-labelledby="list-heading"
       >
-        <Todotasks />
+        {taskList}
       </ul>
     </div>
   );

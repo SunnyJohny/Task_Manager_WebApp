@@ -1,20 +1,17 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-// import { DATA } from '../../componets/DATA';
-import { FILTER_MAP } from '../../componets/FILTERmap.js';
-import { FILTER_NAMES } from '../../componets/FILTERmap.js';
+
 
 import { clouddb } from '../../FirebaseConfig';
 
 // import { getDocs,collection,doc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
-import { collection,getDocs,deleteDoc,doc }  from 'firebase/firestore';
+import { collection,getDocs }  from 'firebase/firestore';
 
 
 // import { createAsyncThunk } from '@reduxjs/toolkit';
 // let ArrayOfDocs = []
 const initialState = {
   DATA: [],
-  FILTER_MAP: FILTER_MAP,
-  FILTER_NAMES: FILTER_NAMES,
+ 
   numberOfTasks: 0,
   tasksNoun: 'Tasks',
   isLoading: true,
@@ -119,10 +116,10 @@ const todoSlice = createSlice({
 extraReducers: {
   [getFirebaseDATA.pending]: (state) => {
     state.isLoading = true;
-    console.log(state.isLoading)
+   
   },
   [getFirebaseDATA.fulfilled]: (state, action) => {
-    console.log(action.payload);
+    
     state.isLoading = false;
     state.DATA = action.payload;
   },
