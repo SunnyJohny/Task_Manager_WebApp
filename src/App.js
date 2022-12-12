@@ -116,13 +116,16 @@ let year = date.getFullYear();
 
 // This arrangement can be altered based on how we want the date's format to appear.
 let todaysDate = `${day}-${month}-${year}`;
-console.log(todaysDate); // "17-6-2022"
+// console.log(todaysDate); // "17-6-2022"
 
 return todaysDate;
     
   }
-  currentDate();
-  
+  const goodTime = `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`;
+ 
+  const date = currentDate();
+  console.log(date);
+
 
   // function deleteTask(id) {
   //   const remainingTasks = tasks.filter(task => id !== task.id);
@@ -230,10 +233,12 @@ return todaysDate;
 
   return (
     <div className="todoapp stack-large">
+      {date}
       <ToastContainer />
+      {goodTime} 
 
-      <Form 
-      />
+
+      <Form />
      
 
       <div className="filters btn-group stack-exception">{filterList}</div>
