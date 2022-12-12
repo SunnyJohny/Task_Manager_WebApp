@@ -8,7 +8,8 @@ import { toast } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
 
-export default function Form() {
+     
+      export default function Form() {
   const [name, setName] = useState("");
   const dispatch = useDispatch();
   function handleChange(e) {
@@ -41,6 +42,8 @@ export default function Form() {
 
   return (
     <form>
+     
+
       <h2 className="label-wrapper">
         <label htmlFor="new-todo-input" className="label__lg">
           What needs to be done?

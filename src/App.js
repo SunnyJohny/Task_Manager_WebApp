@@ -43,6 +43,7 @@ import { getFirebaseDATA } from "./features/todo/todoSlice";
 import { doc, deleteDoc, updateDoc, setDoc } from "firebase/firestore";
 import { clouddb } from "./FirebaseConfig";
 import { toast, ToastContainer } from "react-toastify";
+import { current } from "@reduxjs/toolkit";
 
 function usePrevious(value) {
   const ref = useRef();
@@ -68,7 +69,7 @@ function App(props) {
 
   useEffect(() => {
     dispatch(getFirebaseDATA());
-  },[dispatch]);
+  }, [dispatch]);
 
   const updateDocument = async (id, newName, e) => {
     // e.preventDefault();
@@ -91,6 +92,7 @@ function App(props) {
   };
   const toggleTaskCompleted = async (id, completed) => {
     // e.prevent.default();
+    console.log("logged");
 
     try {
       const washingtonRef = doc(clouddb, "Todo", id);
@@ -98,12 +100,29 @@ function App(props) {
       await updateDoc(washingtonRef, {
         completed: !completed,
       });
-    // dispatch(getFirebaseDATA());
-
+      dispatch(getFirebaseDATA());
     } catch (error) {
       console.log(error);
     }
   };
+  
+  
+ const currentDate = () => {
+  const date = new Date();
+
+let day = date.getDate();
+let month = date.getMonth() + 1;
+let year = date.getFullYear();
+
+// This arrangement can be altered based on how we want the date's format to appear.
+let todaysDate = `${day}-${month}-${year}`;
+console.log(todaysDate); // "17-6-2022"
+
+return todaysDate;
+    
+  }
+  currentDate();
+  
 
   // function deleteTask(id) {
   //   const remainingTasks = tasks.filter(task => id !== task.id);
@@ -118,7 +137,6 @@ function App(props) {
 
       try {
         await deleteDoc(doc(clouddb, "Todo", id));
-       
 
         dispatch(getFirebaseDATA());
 
@@ -214,13 +232,16 @@ function App(props) {
     <div className="todoapp stack-large">
       <ToastContainer />
 
-      <Form addTask={submitTask} />
+      <Form 
+      />
+     
+
       <div className="filters btn-group stack-exception">{filterList}</div>
       <h2 id="list-heading" tabIndex="-1" ref={listHeadingRef}>
         {headingText}
       </h2>
       <ul
-      
+       
         className="todo-list stack-large stack-exception"
         aria-labelledby="list-heading"
       >
