@@ -1,49 +1,17 @@
-//   // async function getAllDocs() {
 
-//   // querySnapshot.forEach((docu) => {
-//   // doc.data() is never undefined for query doc snapshots
-//   // console.log(doc.id, " => ", doc.data());
-
-//   // for (let doc of querySnapshot.docs) {
-//   // ArrayOfDocs.push(docu.data());
-
-//   // const usersCollection = collection(clouddb,"users");
-//   //   useEffect(() => {
-//   //   // let ArrayOfDocs = [];
-
-//   //  getAllDocs();
-//   // },[]);
-
-//   // console.log(ArrayOfDocs);
-
-//   // function addTask(name){
-//   //   const newTask = { id: `todo-${nanoid()}`, name, completed: false };
-//   //  setTasks([...DATA,newTask]);
-
-//   // }
-
-//     const taskList = DATA.filter(FILTER_MAP[FILTER])
-//   .map((task) => (
-//     <Todo
-//       id={task.id}
-//       name={task.name}
-//       completed={task.completed}
-//       key={task.id}
-//     />
-//   ));
 
 import React, { useState, useRef, useEffect } from "react";
 
 import Form from "./componets/Form";
 import FilterButton from "./componets/FilterButton";
 import Todo from "./componets/todo";
-// import { useSelector } from 'react-redux';
+
 import { useDispatch, useSelector } from "react-redux";
 import { getFirebaseDATA } from "./features/todo/todoSlice";
-import { doc, deleteDoc, updateDoc, setDoc } from "firebase/firestore";
+import { doc, deleteDoc, updateDoc } from "firebase/firestore";
 import { clouddb } from "./FirebaseConfig";
 import { toast, ToastContainer } from "react-toastify";
-import { current } from "@reduxjs/toolkit";
+
 
 function usePrevious(value) {
   const ref = useRef();
@@ -84,16 +52,13 @@ function App(props) {
 
       toast("Task Edited Succesfully");
 
-      // setNewName("");
-      // setEditing(false);
+     
     } catch (error) {
       console.log(error);
     }
   };
   const toggleTaskCompleted = async (id, completed) => {
     // e.prevent.default();
-    console.log("logged");
-
     try {
       const washingtonRef = doc(clouddb, "Todo", id);
 
@@ -107,36 +72,25 @@ function App(props) {
   };
   
   
- const currentDate = () => {
-  const date = new Date();
+const currentDate = () => {
+const date = new Date();
 
 let day = date.getDate();
 let month = date.getMonth() + 1;
 let year = date.getFullYear();
 
-// This arrangement can be altered based on how we want the date's format to appear.
 let todaysDate = `${day}-${month}-${year}`;
-// console.log(todaysDate); // "17-6-2022"
-
 return todaysDate;
     
   }
   const goodTime = `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`;
  
   const date = currentDate();
-  console.log(date);
+  
 
-
-  // function deleteTask(id) {
-  //   const remainingTasks = tasks.filter(task => id !== task.id);
-  //   setTasks(remainingTasks);
-  // }
   const deleteTodo = async (id) => {
     if (window.confirm("are you sure you want to delete")) {
-      //   console.log("delete")
-      // console.log(id,deleteData );
-
-      // dispatch(deleteData(id));
+   
 
       try {
         await deleteDoc(doc(clouddb, "Todo", id));
@@ -150,17 +104,7 @@ return todaysDate;
     }
   };
 
-  // function editTask(id, newName) {
-  //   const editedTaskList = tasks.map(task => {
-  //   // if this task has the same ID as the edited task
-  //     if (id === task.id) {
-  //       //
-  //       return {...task, name: newName}
-  //     }
-  //     return task;
-  //   });
-  //   setTasks(editedTaskList);
-  // }
+ 
 
   const taskList = DATA.filter(FILTER_MAP[filter]).map((task) => (
     <Todo
@@ -184,41 +128,6 @@ return todaysDate;
     />
   ));
 
-  // function addTask(name) {
-  //   const newTask = { id: "todo-" + nanoid(), name: name, completed: false };
-  //   setTasks([...tasks, newTask]);
-  // }
-
-  const submitTask = async (id, name, e) => {
-    console.log("loged");
-    console.log(name);
-
-    //  e.preventDefault();
-    //   if(name===('') ){
-    //  toast.warning('pls enter the task name')
-
-    // } else{
-    // const  id = 'todo-' + 0;
-
-    let TimeStamp = new Date().toLocaleString();
-
-    let ref = doc(clouddb, "Todo/" + name);
-
-    await setDoc(ref, {
-      //  ImageName:(name+ext),
-      // id: id+1,
-      name: name,
-
-      completed: false,
-      time: TimeStamp,
-    });
-    // setName('');
-
-    toast("Tasks Added");
-    // }
-    dispatch(getFirebaseDATA());
-  };
-
   const tasksNoun = taskList.length !== 1 ? "tasks" : "task";
   const headingText = `${taskList.length} ${tasksNoun} remaining`;
 
@@ -236,11 +145,7 @@ return todaysDate;
       {date}
       <ToastContainer />
       {goodTime} 
-
-
       <Form />
-     
-
       <div className="filters btn-group stack-exception">{filterList}</div>
       <h2 id="list-heading" tabIndex="-1" ref={listHeadingRef}>
         {headingText}

@@ -77,7 +77,10 @@ export default function Todo({id,name,completed, time, deleteTask,toggleTaskComp
             id={id}
             type="checkbox"
             defaultChecked={completed}
-            completed={completed}
+            // completed={completed ? true : undefined}
+            completed="false"
+
+            // ={condition ? true : undefined}
             onChange={() =>toggleTaskCompleted(id,completed)}
           />
           <label className="todo-label" htmlFor={id}>
